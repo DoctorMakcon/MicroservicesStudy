@@ -1,7 +1,8 @@
 ###### HOW TO RUN
 
-<pre>From solution root:
-	docker build -t username/platformservice
+<pre>
+Docker:
+	docker build -t username/platformservice .
 	docker run -p 8080:80 -d username/platformservice
 
 MSSQL in K8:

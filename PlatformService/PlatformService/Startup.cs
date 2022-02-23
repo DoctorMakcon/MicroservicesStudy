@@ -9,21 +9,33 @@ using PlatformService.Database;
 using PlatformService.Database.Contexts;
 using PlatformService.Implementation.Interfaces;
 using PlatformService.Implementation.Repositories;
+using System;
 
 namespace PlatformService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase("InMemory"));
+            if (_environment.IsProduction())
+            {
+                Console.WriteLine("---> Initialize Sql Server usage");
+                services.AddDbContext<AppDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("PlatformsDb")));
+            }
+            else
+            {
+                Console.WriteLine("---> Initialize InMemory Database");
+                services.AddDbContext<AppDbContext>(x => x.UseInMemoryDatabase("InMemory"));
+            }
 
             services.AddScoped<IPlatformRepository, PlatformRepository>();
 
@@ -54,7 +66,7 @@ namespace PlatformService
                 endpoints.MapControllers();
             });
 
-            PrepopulateDatabase.Prepopulate(app);
+            PrepopulateDatabase.Prepopulate(app, _environment.IsProduction());
         }
     }
 }

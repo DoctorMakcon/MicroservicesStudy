@@ -1,23 +1,31 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PlatformService.Database.Contexts;
 using PlatformService.Database.Models;
+using System;
 using System.Linq;
 
 namespace PlatformService.Database
 {
     public static class PrepopulateDatabase
     {
-        public static void Prepopulate(IApplicationBuilder builder)
+        public static void Prepopulate(IApplicationBuilder builder, bool isProduction)
         {
             using (var scope = builder.ApplicationServices.CreateScope())
             {
-                SeedData(scope.ServiceProvider.GetService<AppDbContext>());
+                SeedData(scope.ServiceProvider.GetService<AppDbContext>(), isProduction);
             }
         }
 
-        private static void SeedData(AppDbContext context)
+        private static void SeedData(AppDbContext context, bool isProduction)
         {
+            if (isProduction)
+            {
+                Console.WriteLine("Applying migrations");
+                context.Database.Migrate();
+            }
+
             if (!context.Platforms.Any())
             {
                 context.Platforms.AddRange(

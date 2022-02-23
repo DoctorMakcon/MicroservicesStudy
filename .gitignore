@@ -452,3 +452,4 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/PlatformService/K8S/docker_k8s_cheatsheet.pdf
