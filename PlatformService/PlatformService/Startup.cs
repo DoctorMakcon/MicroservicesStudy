@@ -9,6 +9,7 @@ using PlatformService.Database;
 using PlatformService.Database.Contexts;
 using PlatformService.Implementation.Interfaces;
 using PlatformService.Implementation.Repositories;
+using PlatformService.Implementation.SyncDataServices.Http;
 using System;
 
 namespace PlatformService
@@ -38,6 +39,8 @@ namespace PlatformService
             }
 
             services.AddScoped<IPlatformRepository, PlatformRepository>();
+
+            services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
