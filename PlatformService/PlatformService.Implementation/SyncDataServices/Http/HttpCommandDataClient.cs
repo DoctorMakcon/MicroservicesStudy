@@ -22,7 +22,7 @@ namespace PlatformService.Implementation.SyncDataServices.Http
 
         public async Task SendPlatformToCommandService(PlatformReadDto platform)
         {
-            var httpContent = new StringContent(JsonSerializer.Serialize(platform), Encoding.UTF8, "application/json");
+            var httpContent = new StringContent("123", Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync($"{_configuration["CommandServiceUrl"]}/api/c/platforms/", httpContent);
 
